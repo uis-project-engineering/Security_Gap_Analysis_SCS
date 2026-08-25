@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCS ギャップ診断（44問・詳細版）</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "BIZ UDPGothic", "Yu Gothic Medium", "游ゴシック Medium", YuGothic, "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    background: #F2F4F7;
+    color: #1A2233;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 26px 20px 60px; }
+  .head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; flex-wrap: wrap; }
+  .logo { width: 42px; height: 42px; border-radius: 6px; background: #1F2A66; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #FFFFFF; font-size: 20px; }
+  .title { font-size: 20px; font-weight: 700; letter-spacing: 0.01em; }
+  .tabs { display: flex; gap: 8px; margin-left: auto; }
+  .tab { font-size: 13px; font-weight: 700; padding: 9px 16px; border-radius: 6px; cursor: pointer; border: 1px solid #C9CFD8; background: #FFFFFF; color: #3D4A63; }
+  .tab.on { background: #1F2A66; color: #FFFFFF; border: 1px solid transparent; }
+  .toolbar { display: flex; align-items: center; gap: 10px; margin: 14px 0 18px; flex-wrap: wrap; }
+  .field { background: #FFFFFF; border: 1px solid #D5DAE3; border-radius: 6px; padding: 9px 14px; color: #1A2233; font-size: 13.5px; font-family: inherit; }
+  .starbtn { font-size: 13px; font-weight: 700; padding: 9px 15px; border-radius: 6px; cursor: pointer; }
+  .star-on { background: #1F2A66; color: #fff; border: 1px solid transparent; }
+  .star-off { background: #FFFFFF; color: #3D4A63; border: 1px solid #C9CFD8; }
+  .card { border-radius: 8px; background: #FFFFFF; border: 1px solid #D5DAE3; box-shadow: 0 1px 3px rgba(16,24,40,0.10); padding: 30px; }
+  .section { border-radius: 8px; padding: 24px 28px; background: #FFFFFF; border: 1px solid #D5DAE3; margin-bottom: 16px; }
+  .qmeta { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; color: #2E5AAC; letter-spacing: 0.06em; }
+  .qcat { background: rgba(46,90,172,0.08); border-radius: 999px; padding: 3px 12px; white-space: nowrap; }
+  .qmeta { flex-wrap: wrap; }
+  .qtext { font-size: 21px; font-weight: 700; line-height: 1.6; margin: 14px 0 8px; }
+  .qhint { font-size: 13px; color: #6B7689; line-height: 1.7; margin-bottom: 22px; }
+  .opts { display: grid; gap: 12px; }
+  .opt { font-family: inherit; padding: 15px 20px; border-radius: 8px; cursor: pointer; text-align: left; border: 2px solid transparent; background: #FFFFFF; border-color: #C9CFD8; color: #1F2A66; display: flex; align-items: center; gap: 16px; transition: transform .12s ease, background .15s ease; box-shadow: 0 1px 2px rgba(16,24,40,0.06); }
+  .opt:hover { background: #F2F6FC; transform: translateY(-1px); }
+  .opt.sel { background: #EEF3FB; }
+  .optkey { width: 30px; height: 30px; flex-shrink: 0; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; background: #1F2A66; color: #fff; }
+  .optlabel { display: block; flex: 1; font-weight: 700; font-size: 15px; }
+  .nav { display: flex; align-items: center; justify-content: space-between; margin-top: 24px; }
+  .navbtn { font-family: inherit; font-size: 13.5px; font-weight: 700; padding: 11px 22px; border-radius: 6px; cursor: pointer; border: 1px solid #C9CFD8; background: transparent; color: #3D4A63; }
+  .navbtn:disabled { color: rgba(199,209,255,0.35); cursor: default; }
+  .navbtn.primary { background: #1F2A66; color: #FFFFFF; border: 1px solid transparent; }
+  .dots { display: flex; gap: 5px; flex-wrap: nowrap; justify-content: center; margin-top: 22px; max-width: 100%; }
+  .dot { border: none; padding: 0; border-radius: 999px; cursor: pointer; flex: 0 0 auto; transition: all .18s ease; }
+  .hero { border-radius: 8px; padding: 26px 30px; background: #FFFFFF; border: 1px solid #D5DAE3; box-shadow: 0 1px 3px rgba(16,24,40,0.10); display: grid; grid-template-columns: auto 1fr; gap: 34px; align-items: center; margin-bottom: 16px; }
+  .pct { font-size: 70px; font-weight: 700; line-height: 1; letter-spacing: -0.04em; }
+  .stat { flex: 1; min-width: 120px; border: 1px solid #D5DAE3; border-radius: 6px; padding: 12px 14px; background: #F7F8FA; }
+  .grid7 { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+  .catcard { border: 1px solid #D5DAE3; border-radius: 6px; padding: 12px; background: #F7F8FA; }
+  .prod { border: 1px solid #D5DAE3; border-radius: 6px; overflow: hidden; background: #FFFFFF; margin-bottom: 9px; }
+  .prodhead { width: 100%; text-align: left; background: transparent; border: none; padding: 14px 16px; cursor: pointer; display: grid; grid-template-columns: 26px 1fr auto; gap: 15px; align-items: center; color: #1A2233; font-family: inherit; }
+  .prodhead:hover { background: #F5F8FC; }
+  .rank { width: 26px; height: 26px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; background: rgba(127,216,247,0.16); color: #2E5AAC; }
+  .printhead { display: none; }
+  .pdfbtn { white-space: nowrap; font-family: inherit; font-size: 13px; font-weight: 700; padding: 9px 18px; border-radius: 6px; border: none; background: #1F2A66; color: #fff; cursor: pointer; }
+  .prognum { font-size: 17px; font-weight: 700; color: #1F2A66; }
+  @media print {
+    .head, .toolbar, .pdfbtn { display: none !important; }
+    body { background: #fff; }
+    .wrap { padding: 0; max-width: none; }
+    .printhead { display: block !important; border-bottom: 2px solid #1F2A66; padding-bottom: 8px; margin-bottom: 14px; }
+    .hero, .catcard, .prod, .stat { break-inside: avoid-page; }
+    .section { padding: 18px 20px; }
+    .section.pagebreak { break-before: page; }
+    .shelfhead, h2 { break-after: avoid-page; }
+    @page { size: A4; margin: 18mm 14mm; }
+  }
+  @media (max-width: 720px) {
+    .grid7 { grid-template-columns: repeat(2, 1fr); }
+    .hero { grid-template-columns: 1fr; gap: 16px; }
+    .qtext { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="logo">Q</div>
+    <div>
+      <div class="title">SCS ギャップ診断</div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" id="tab-survey" onclick="setView('survey')">診断</button>
+      <button class="tab" id="tab-result" onclick="setView('result')">結果</button>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input class="field" id="company" placeholder="会社名（任意）" oninput="S.company=this.value">
+    <span style="font-size:12px; font-weight:700; color:#6B7689; margin-left:6px;">取得目標</span>
+    <button class="starbtn" id="s3" onclick="setTarget(3)">★3</button>
+    <button class="starbtn" id="s4" onclick="setTarget(4)">★4</button>
+    <span id="progress" style="font-size:12px; font-weight:700; color:#6B7689; margin-left:auto;"></span>
+    <button class="pdfbtn" onclick="window.print()">PDFとして保存</button>
+    <button class="field" style="cursor:pointer; font-weight:700;" onclick="resetAll()">リセット</button>
+  </div>
+
+  <div id="app"></div>
+</div>
+
+<script>
+const CATS = { 1:"ガバナンスの整備", 2:"取引先管理", 3:"リスクの特定", 4:"攻撃等の防御", 5:"攻撃等の検知", 6:"インシデントへの対応", 7:"インシデントからの復旧" };
+const SELF = "自社で対応が必要";
+const CRITERIA = [
+  ["1-1-1-1", 4, "関連法令・省庁基準・取引先要求を把握して社内ルール策定", [SELF, "サポアカ", "SCSNavi"]],
+  ["1-1-1-2", 4, "法令等の改定状況を年1回以上確認しルール点検", [SELF, "サポアカ継続プラン"]],
+  ["1-1-1-3", 4, "策定・見直した社内ルールを全要員へ周知", [SELF, "サポアカ継続プラン"]],
+  ["1-2-1-1", 3, "セキュリティ統括役員・担当部署の役割と責任を定義", [SELF, "サポアカ"]],
+  ["1-2-1-2", 3, "平時の推進活動に必要な連絡先リストを整備", ["サポアカ", SELF]],
+  ["1-2-1-3", 3, "平時の体制を年1回以上点検", ["サポアカ継続プラン", SELF]],
+  ["1-2-1-4", 4, "経営層参加の情報セキュリティ委員会等の設置", [SELF, "サポアカ"]],
+  ["1-2-2-1", 4, "攻撃・脆弱性情報を活用する体制の整備", [SELF, "SEPS EPP", "LANSCOPE"]],
+  ["1-2-2-2", 4, "ログ相関分析等で予兆・インシデントを検知する体制", ["サポアカ", "Cybereason/CrowdStrike", "SOC", "Cato"]],
+  ["1-2-3-1", 3, "全要員対象の守秘義務ルール策定", ["サポアカ", SELF]],
+  ["1-2-3-2", 3, "入社時・受入時に守秘義務ルールを説明", ["サポアカ", SELF]],
+  ["1-2-3-3", 4, "機密情報を扱う役員・従業員から誓約書を取得", [SELF]],
+  ["1-2-3-4", 4, "派遣元・出向元と業務開始前に守秘義務を締結", [SELF]],
+  ["1-3-1-1", 3, "セキュリティ対応方針の策定", ["サポアカ", SELF]],
+  ["1-3-1-2", 3, "全要員が最新方針を常時参照できる状態", ["サポアカ", SELF]],
+  ["1-3-1-3", 3, "方針改正時に全要員へ周知", ["サポアカ", SELF]],
+  ["1-3-1-4", 4, "方針内容を年1回以上点検", [SELF]],
+  ["1-4-1-1", 4, "年1回以上、点検結果と推進計画を統括役員に報告・承認・共有", [SELF, "サポアカ継続プラン"]],
+  ["1-4-1-2", 4, "役員指示の記録・計画反映・是正", [SELF]],
+  ["2-1-1-1", 3, "外部組織が管理し自社資産が接続するシステムを把握する仕組み", ["サポアカ", SELF]],
+  ["2-1-1-2", 3, "把握した接続情報を年1回以上点検", ["サポアカ継続プラン", "SCSNavi 2回目再診断", SELF]],
+  ["2-1-1-3", 4, "機密情報共有先ごとの授受手段・情報資産を把握する仕組み", ["サポアカ"]],
+  ["2-1-2-1", 3, "共有先と機密情報の定義・制限・返還廃棄を業務開始前に取決め", ["サポアカ", SELF]],
+  ["2-1-3-1", 4, "重要取引先のセキュリティ対策状況を年1回以上把握", [SELF]],
+  ["2-1-4-1", 3, "共有先とインシデント時の役割・責任を取決め", ["サポアカ", SELF]],
+  ["2-1-5-1", 4, "契約終了時の機密情報・アクセス権回収を確認する手順", [SELF]],
+  ["3-1-1-1", 3, "PC・シンクライアントの製造元/OS/台数を把握する仕組み", ["サポアカ", "SEPS EPP", "LANSCOPE", SELF]],
+  ["3-1-1-2", 3, "サーバ・仮想サーバ・ハイパーバイザを把握する仕組み", ["サポアカ", "SEPS EPP", "LANSCOPE", SELF]],
+  ["3-1-1-3", 3, "機器・OS・ソフトの導入/接続/パッチ適用を含む管理ルール", ["サポアカ", "SEPS EPP", "LANSCOPE"]],
+  ["3-1-1-4", 3, "管理ルールの遵守状況を年1回以上点検", ["サポアカ継続プラン", "SCSNavi 2回目再診断", SELF]],
+  ["3-1-1-5", 4, "スマートデバイスの製造元/OS/台数を把握する仕組み", ["SEPS EPP", "LANSCOPE"]],
+  ["3-1-1-6", 4, "重要システム構成機器の設定情報を把握する仕組み", [SELF]],
+  ["3-1-1-7", 4, "把握した資産情報を年1回以上点検", [SELF]],
+  ["3-1-2-1", 3, "ネットワーク（所在地・用途含む）を把握する仕組み", ["サポアカ", SELF]],
+  ["3-1-2-2", 3, "ネットワーク機器（製造元/モデル/保守事業者）を把握する仕組み", ["サポアカ", SELF]],
+  ["3-1-2-3", 4, "ネットワーク図の作成", ["ICT見える化サポート", SELF]],
+  ["3-1-2-4", 4, "ネットワーク図を年1回以上点検", [SELF]],
+  ["3-1-3-1", 3, "外部情報サービス利用時のセキュリティ要件定義と確認", ["サポアカ", SELF]],
+  ["3-1-3-2", 3, "外部サービス事業者と機密情報取扱いの合意", ["サポアカ", SELF]],
+  ["3-1-4-1", 3, "機密の特定・区分・取扱方法・エリア制限を含む管理ルール", ["サポアカ", SELF]],
+  ["3-1-4-2", 3, "機密管理ルールを年1回以上点検", ["サポアカ継続プラン", "SCSNavi 2回目再診断", SELF]],
+  ["3-1-4-3", 3, "重要機密情報の管理者・保管場所・期限・開示先を把握する仕組み", ["サポアカ", SELF]],
+  ["3-1-4-4", 4, "重要機密情報の把握項目を年1回以上点検", [SELF]],
+  ["3-1-4-5", 4, "退職・任期満了時の機密情報・機器・アクセス権の回収手順", ["LANSCOPE", "ジョーシス"]],
+  ["3-1-4-6", 4, "回収状況を年1回以上点検", [SELF]],
+  ["3-1-4-7", 4, "廃棄・リース終了時のデータ抹消処理（フォーマット不可）", [SELF]],
+  ["3-1-4-8", 4, "抹消処理の記録を保管", [SELF]],
+  ["3-1-5-1", 4, "リモートワークで使用する機器・機密情報条件のルール", [SELF]],
+  ["3-1-5-2", 4, "リモートワークルールを対象者全員に周知", [SELF]],
+  ["3-1-5-3", 4, "リモートワークルールと遵守状況を年1回以上点検", [SELF]],
+  ["3-2-1-1", 4, "脆弱性/脅威情報の収集〜対応の役割・責任", ["LANSCOPE", "SEPS EPP", SELF]],
+  ["3-2-1-2", 4, "脆弱性/脅威情報の情報源・ツール・頻度を定義", ["SEPS EPP", "LANSCOPE", SELF]],
+  ["3-2-1-3", 4, "対応要否の判断基準と対応手順", ["SEPS EPP", "LANSCOPE", SELF]],
+  ["3-2-1-4", 4, "管理対象機器の脆弱性残存状況を把握する仕組み", ["SEPS EPP", "LANSCOPE"]],
+  ["3-2-1-5", 4, "対応履歴を記録し月次で対応漏れ点検", ["SEPS EPP", "LANSCOPE", SELF]],
+  ["4-1-1-1", 3, "ユーザIDの付与・変更・削除を申請承認制に", ["ジョーシス", "GMOトラストログイン"]],
+  ["4-1-1-2", 3, "ユーザIDを共有しない／共有時は利用者特定可能", ["LANSCOPE", "ジョーシス"]],
+  ["4-1-1-3", 3, "不要になったユーザIDを速やかに削除・無効化", ["ジョーシス"]],
+  ["4-1-1-4", 3, "不要になったアクセス権を速やかに削除・無効化", ["ジョーシス", "GMOトラストログイン", SELF]],
+  ["4-1-2-1", 3, "全サーバ・NW機器のシステム管理者・責任者を定義", ["サポアカ", SELF]],
+  ["4-1-2-2", 3, "管理者IDの付与対象を限定し共有禁止／特定可能", ["ジョーシス", SELF]],
+  ["4-1-2-3", 3, "管理者IDへ必要最低限の権限のみ付与", ["ジョーシス", SELF, "GMOトラストログイン"]],
+  ["4-1-2-4", 3, "開発環境の管理者権限で本番操作できない分離", ["ジョーシス", SELF]],
+  ["4-1-2-5", 3, "誰が管理者IDを持つか把握する仕組み", ["ジョーシス", SELF]],
+  ["4-1-2-6", 3, "不要になった管理者IDを速やかに削除・無効化", ["ジョーシス", SELF]],
+  ["4-1-2-7", 3, "管理者IDの付与・変更・削除を申請承認制に", ["ジョーシス", SELF]],
+  ["4-1-2-8", 3, "管理者ID操作・機器設定変更権限を業務上必要な者に限定", ["ジョーシス", SELF]],
+  ["4-1-3-1", 3, "全ID について認証情報によるユーザ認証", [SELF, "GMOトラストログイン"]],
+  ["4-1-3-2", 3, "重要機密を扱うクラウドサービスへのアクセスに常時MFA", ["ジョーシス", "GMOトラストログイン"]],
+  ["4-1-3-3", 3, "MFAは知識・所有・生体・その他から2要素以上", ["HENNGE", "ジョーシス", "GMOトラストログイン"]],
+  ["4-1-3-4", 3, "MFAの知識情報パスワードは8文字以上", [SELF, "ジョーシス", "GMOトラストログイン"]],
+  ["4-1-3-5", 4, "インターネット経由の社内接続・管理者・重要システムアクセスに常時MFA", ["HENNGE", "GMOトラストログイン"]],
+  ["4-1-4-1", 3, "PC/スマデバのログオンに試行制限またはロック（10回以上）", [SELF, "サポアカ"]],
+  ["4-1-4-2", 3, "PC/スマデバのロック解除は6文字以上のパスワード/PIN", [SELF, "サポアカ"]],
+  ["4-1-5-1", 3, "デフォルトパスワード変更ルール", [SELF]],
+  ["4-1-5-2", 3, "推測されやすいパスワードの禁止ルール", [SELF]],
+  ["4-1-5-3", 3, "MFA/ロック＋8文字以上、または英大小数字10文字以上", [SELF, "HENNGE", "GMOトラストログイン"]],
+  ["4-1-5-4", 3, "パスワード使い回し禁止ルール", [SELF]],
+  ["4-1-5-5", 3, "パスワード設定ルールを全要員へ周知", [SELF]],
+  ["4-1-6-1", 3, "パスワードの安全な保管ルール（施錠保管・管理アプリ等）", [SELF]],
+  ["4-1-6-2", 3, "漏洩時・疑い時の速やかな変更手順", [SELF]],
+  ["4-1-6-3", 3, "パスワード管理ルールを全要員へ周知", [SELF]],
+  ["4-1-7-1", 3, "アクセス権・入室権限の申請承認・最小化・棚卸・台帳ルール", [SELF, "サポアカ"]],
+  ["4-1-7-2", 4, "付与したアクセス権の棚卸を年1回以上実施", [SELF, "サポアカ継続プラン"]],
+  ["4-1-7-3", 4, "重要システムのアクセス権付与条件を定義", [SELF, "ジョーシス"]],
+  ["4-1-7-4", 4, "重要システムのアクセス権設定：管理者要件と設定手順", ["ジョーシス", SELF]],
+  ["4-1-7-5", 4, "重要システムで最小権限・権限集中の回避", ["ジョーシス", SELF]],
+  ["4-1-7-6", 4, "重要システムのアクセス権利用状況を監視する仕組み", ["ジョーシス", SELF]],
+  ["4-1-8-1", 4, "サーバ設置エリアへの入場可能者を定義", [SELF]],
+  ["4-1-8-2", 4, "サーバ設置エリアまたは専用ラックを施錠", [SELF]],
+  ["4-1-8-3", 4, "鍵等の管理者を定め安全に管理", [SELF]],
+  ["4-1-8-4", 4, "入退場記録（日時・氏名）を6ヶ月以上保管", [SELF]],
+  ["4-1-9-1", 4, "PC・スマデバ・カメラ・外部媒体（BYOD含む）の社内持込ルール", [SELF]],
+  ["4-1-9-2", 4, "機器・媒体・印刷物の社外持出ルール", [SELF]],
+  ["4-1-9-3", 4, "持込・持出ルールと遵守状況を年1回以上点検", [SELF]],
+  ["4-2-1-1", 4, "経営層が役割・責任を理解する機会の設定", ["サポアカ"]],
+  ["4-2-1-2", 4, "職場単位の重要ルール・リスクを年1回以上周知", ["サポアカ", SELF]],
+  ["4-2-1-3", 4, "メール/Web感染予防・機密区分の教育を新規時＋年1回以上", ["サポアカ", "防ぐくん"]],
+  ["4-2-1-4", 4, "教育・研修の実施記録を保管", ["サポアカ", SELF, "防ぐくん"]],
+  ["4-2-1-5", 4, "意識向上教育の内容を年1回以上点検", ["防ぐくん", SELF, "サポアカ"]],
+  ["4-2-2-1", 3, "インシデント対応の教育・訓練を新規時＋年1回以上（eラーニング/集合）", ["防ぐくん"]],
+  ["4-2-2-2", 3, "訓練の内容・方法・時期・受講状況を記録保管", ["防ぐくん"]],
+  ["4-2-2-3", 3, "インシデント対応訓練の内容を年1回以上点検", ["防ぐくん"]],
+  ["4-3-1-1", 4, "社外持出PC・媒体の機密情報暗号化ルールと周知", ["SEPS EPP", "SEPS EDR"]],
+  ["4-3-1-2", 4, "重要機密情報の暗号化ルールと周知", [SELF]],
+  ["4-3-2-1", 4, "業務影響データはPC以外の安全区域サーバに保管するルール", [SELF, "バックアップサービス"]],
+  ["4-3-3-1", 4, "取引先との共有・送信ルール（信頼相手のみ・送信履歴）", [SELF]],
+  ["4-3-4-1", 3, "取得対象・頻度・保管期間を定めたバックアップ", ["バックアップサービス"]],
+  ["4-3-4-2", 3, "重要機密情報の遠隔地バックアップ", ["バックアップサービス"]],
+  ["4-3-4-3", 3, "バックアップ対象ごとのリストア手順書", ["サポアカ", "バックアップサービス"]],
+  ["4-4-1-1", 3, "未許可ソフトの削除・無効化またはインストール制限", [SELF, "LANSCOPE"]],
+  ["4-4-1-2", 3, "外部媒体使用端末のauto-run/auto-play無効化", ["SEPS EPP"]],
+  ["4-4-1-3", 3, "サーバ・NW機器の設定変更を申請承認制に", [SELF]],
+  ["4-4-1-4", 4, "PC・サーバの不要サービス・プロトコル無効化", ["LANSCOPE"]],
+  ["4-4-1-5", 4, "デフォルトユーザIDの停止またはMFA等の強固な認証", ["HENNGE", "GMOトラストログイン", "ジョーシス"]],
+  ["4-4-1-6", 4, "OS・ソフトの標準構成・設定ルール", [SELF]],
+  ["4-4-2-1", 4, "サポート切れOS/ソフトの不使用、または更改計画＋リスク低減策", ["LANSCOPE", "SEPS EPP", "ASM", "脆弱性診断"]],
+  ["4-4-3-1", 4, "FW・プロキシ・認証サーバのログを6ヶ月取得保管（クラウド含む）", ["SOC", SELF, "Cato"]],
+  ["4-4-3-2", 4, "ログ保存システムへのインターネット経由アクセスに常時MFA", ["GMOトラストログイン", "ジョーシス", SELF, "サポアカ"]],
+  ["4-4-3-3", 4, "認証サーバログを月1回以上モニタリングし不審試行を検知", ["SOC", SELF, "Cato"]],
+  ["4-4-4-1", 3, "ライセンス・サポート状態の維持、自動アップデート有効化", [SELF, "SEPS EPP", "SG-ONE"]],
+  ["4-4-4-2", 3, "Critical/High/CVSS7.0以上の更新を14日以内に適用（または代替策）", ["SEPS EPP", "LANSCOPE"]],
+  ["4-4-4-3", 4, "境界NW機器にCVSS7.0以上の脆弱性が残存しない", ["ASM", "脆弱性診断", "SG-ONE"]],
+  ["4-4-5-1", 3, "全PC・サーバにマルウェア対策ソフト導入", ["SEPS EPP"]],
+  ["4-4-5-2", 3, "機器ごとのスキャン範囲・頻度を定めて実行", ["SEPS EPP"]],
+  ["4-4-5-3", 3, "パターンファイルをベンダー推奨に従い更新", ["SEPS EPP"]],
+  ["4-4-5-4", 4, "PC/Webゲートウェイで不正サイトへのアクセス制限", ["LANSCOPE", "SG-ONE", "SEPS EPP", "Cato"]],
+  ["4-4-5-5", 4, "メールゲートウェイ等でのマルウェアチェック", ["SEPS EPP", "SG-ONE"]],
+  ["4-5-1-1", 3, "FW・ルータのデフォルト管理パスワード変更またはリモートアクセス無効化", ["SG-ONE", "VSR", "Cato"]],
+  ["4-5-1-2", 3, "FW・ルータのパスワード変更手順", [SELF]],
+  ["4-5-1-3", 3, "FW・ルータ認証がパスワード基準を満たす", [SELF]],
+  ["4-5-1-4", 3, "全FWで未認証インバウンド通信を遮断", ["SG-ONE", "VSR", "Cato"]],
+  ["4-5-1-5", 3, "全FWでインバウンド通信ルールを定義", ["SG-ONE", "VSR", "Cato"]],
+  ["4-5-1-6", 3, "不要FWルールの速やかな削除・無効化", [SELF]],
+  ["4-5-1-7", 3, "FWルール変更をインターネット経由で行う場合MFAまたはIP制限", [SELF, "ソリトンOnegate", "GMOトラストログイン"]],
+  ["4-5-1-8", 4, "全PC・サーバでソフトウェアFW有効化", ["SEPS EPP"]],
+  ["4-5-1-9", 4, "公開サーバ・重要サーバを専用セグメントに分離し最小アクセス", [SELF, "Cato"]],
+  ["5-1-1-1", 3, "境界または端末で双方向の不正アクセスをリアルタイム検知・遮断", ["SG-ONE", "VSR", "WAF", "SEPS EPP", "SEPS EDR", "Cato"]],
+  ["5-1-1-2", 3, "NW機器ログ・アラートを分析しインシデント該当を判断", [SELF, "SOC", "Cato"]],
+  ["5-1-1-3", 3, "異常時の速やかなアラートと速報レポート通知", ["SG-ONE", "VSR", SELF, "Cato"]],
+  ["5-1-2-1", 4, "会社支給PCの許可ソフトウェア一覧", ["SEPS EPP", "SEPS EDR", "LANSCOPE", SELF]],
+  ["5-1-2-2", 4, "PCのソフトインストール状況を年1回以上点検", ["SEPS EPP", "LANSCOPE"]],
+  ["5-1-2-3", 4, "外部受領ファイルのリアルタイムスキャンまたは仮想環境確認", ["SEPS EPP"]],
+  ["5-2-1-1", 4, "インシデントのレベルと対象範囲を定義し周知", [SELF, "サポアカ"]],
+  ["5-2-1-2", 4, "検知・アラート時にレベル判定を実施", ["サポアカ", SELF, "Cato"]],
+  ["6-1-1-1", 3, "発見報告〜最終報告までの対応手順", [SELF, "サポアカ", "フォレンジック/IR"]],
+  ["6-1-1-2", 3, "社内外（当局含む）連絡先と報告・共有ルート", [SELF, "サポアカ", "フォレンジック/IR"]],
+  ["6-1-1-3", 3, "インシデント時の統括役員・担当部署の役割責任", [SELF, "サポアカ"]],
+  ["6-1-1-4", 3, "インシデント体制を年1回以上点検", [SELF, "サポアカ"]],
+  ["6-1-1-5", 3, "インシデント報告フォーマットの整備", ["サポアカ", SELF]],
+  ["6-1-1-6", 3, "年1回以上＋重大事案時に事例と対応策を社内共有", ["サポアカ", SELF]],
+  ["7-1-1-1", 3, "重要システムの目標復旧レベル定義と復旧対策の整備", ["サポアカ", SELF]],
+  ["7-1-1-2", 4, "RPO復旧のバックアップ保管とRTO内リストア検証", ["バックアップサービス", "サポアカ"]]
+];
+const CMAP = Object.fromEntries(CRITERIA.map(c => [c[0], c]));
+const PRODUCT_NOTE = {
+  "サポアカ":"規程・体制・ルール整備の伴走支援","サポアカ継続プラン":"年次点検・見直し運用の継続支援","SCSNavi":"SCS自己診断・ギャップ可視化","SCSNavi 2回目再診断":"年次の再診断で点検実績を確保","SEPS EPP":"エンドポイント保護・資産把握・パッチ管理","SEPS EDR":"端末の挙動検知・対応","LANSCOPE":"IT資産管理・ソフト制御・脆弱性把握","Cybereason/CrowdStrike":"EDR/XDRによる相関検知","SOC":"ログ監視・認証ログの月次レビュー代行","Cato":"SASE上のログ集約・脅威検知・境界制御","ジョーシス":"ID/デバイスのライフサイクル管理・棚卸","GMOトラストログイン":"SSO・MFA・アクセス制御","HENNGE":"クラウドMFA・アクセス制御","防ぐくん":"eラーニング・訓練記録の一元管理","バックアップサービス":"遠隔地バックアップ・リストア基盤","ICT見える化サポート":"ネットワーク図作成支援","ASM":"外部公開資産の継続スキャン","脆弱性診断":"境界機器・公開サーバの脆弱性評価","SG-ONE":"UTM/境界防御・Webフィルタ・メール対策","VSR":"仮想セキュアルータによる境界制御","WAF":"Webアプリケーション保護","ソリトンOnegate":"証明書ベースのアクセス制御","フォレンジック/IR":"インシデント時の調査・初動支援"
+};
+const QUESTIONS = [
+  { id:"g1", cat:1, q:"関連法令・所管省庁の基準・取引先要求を踏まえた社内セキュリティルールが文書化され、全要員に周知されていますか？", ids:["1-1-1-1", "1-1-1-3"] },
+  { id:"g2", cat:1, q:"法令等の改定状況やセキュリティ対応方針を、年1回以上の頻度で見直していますか？", ids:["1-1-1-2", "1-3-1-4"] },
+  { id:"g3", cat:1, q:"セキュリティを統括する役員と担当部署の役割・責任・連絡先が明文化され、年1回以上点検されていますか？", ids:["1-2-1-1", "1-2-1-2", "1-2-1-3"] },
+  { id:"g4", cat:1, q:"経営層が参加し、セキュリティリスクについて経営判断ができる会議体（情報セキュリティ委員会等）がありますか？", ids:["1-2-1-4"] },
+  { id:"g5", cat:1, q:"脆弱性・脅威情報を収集し、ログの相関分析などで攻撃の予兆やインシデントを検知できる体制がありますか？", ids:["1-2-2-1", "1-2-2-2"] },
+  { id:"g6", cat:1, q:"守秘義務ルールが定められ、入社時・受入時に説明し、機密を扱う者から誓約書を取得し、派遣元・出向元とも契約していますか？", ids:["1-2-3-1", "1-2-3-2", "1-2-3-3", "1-2-3-4"] },
+  { id:"g7", cat:1, q:"セキュリティ対応方針（ポリシー）が策定され、全要員が最新版を参照でき、改正時に周知されていますか？", ids:["1-3-1-1", "1-3-1-2", "1-3-1-3"] },
+  { id:"g8", cat:1, q:"年1回以上、各対策の点検結果と今後の推進計画を統括役員に報告・承認を得て社内共有し、役員指示を記録・反映していますか？", ids:["1-4-1-1", "1-4-1-2"] },
+  { id:"s1", cat:2, q:"顧客・子会社・クラウド事業者など外部組織が管理し自社資産が接続しているシステムを一覧化し、年1回以上点検していますか？", ids:["2-1-1-1", "2-1-1-2", "2-1-1-3"] },
+  { id:"s2", cat:2, q:"機密情報を共有する取引先と、業務開始前に機密情報の定義・取扱い・返還廃棄と、インシデント時の役割分担を取り決めていますか？", ids:["2-1-2-1", "2-1-4-1"] },
+  { id:"s3", cat:2, q:"重要取引先のセキュリティ対策状況を年1回以上把握し、契約終了時には機密情報・アクセス権の回収を確認する手順がありますか？", ids:["2-1-3-1", "2-1-5-1"] },
+  { id:"i1", cat:3, q:"PC・サーバ・仮想基盤・スマートデバイスの製造元/OS/台数、重要機器の設定情報を把握する仕組み（資産台帳・管理ツール）があり、年1回以上点検していますか？", ids:["3-1-1-1", "3-1-1-2", "3-1-1-5", "3-1-1-6", "3-1-1-7"] },
+  { id:"i2", cat:3, q:"情報機器・OS・ソフトの導入・設置・ネットワーク接続・パッチ適用を含む管理ルールがあり、遵守状況を年1回以上点検していますか？", ids:["3-1-1-3", "3-1-1-4"] },
+  { id:"i3", cat:3, q:"ネットワークとネットワーク機器（所在地・用途・製造元・保守事業者）を把握し、ネットワーク図を作成・年1回以上更新していますか？", ids:["3-1-2-1", "3-1-2-2", "3-1-2-3", "3-1-2-4"] },
+  { id:"i4", cat:3, q:"外部情報サービス（SaaS等）利用時のセキュリティ要件を定め、事業者と機密情報の取扱いについて合意していますか？", ids:["3-1-3-1", "3-1-3-2"] },
+  { id:"i5", cat:3, q:"機密区分（特定・レベル判定・表示・取扱方法・エリア制限）のルールがあり、重要機密情報の管理者・保管場所・期限・開示先を台帳で管理し、年1回以上点検していますか？", ids:["3-1-4-1", "3-1-4-2", "3-1-4-3", "3-1-4-4"] },
+  { id:"i6", cat:3, q:"退職時に機密情報・機器・アクセス権を漏れなく回収する手順があり、廃棄時はデータ抹消処理を行って記録を保管していますか？", ids:["3-1-4-5", "3-1-4-6", "3-1-4-7", "3-1-4-8"] },
+  { id:"i7", cat:3, q:"リモートワークで使用を許可する機器と申請・承認方法、個人所有機器にダウンロード可能な情報の範囲をルール化し、周知・年1回以上点検していますか？", ids:["3-1-5-1", "3-1-5-2", "3-1-5-3"] },
+  { id:"i8", cat:3, q:"脆弱性情報の収集源・頻度・担当・対応要否の判断基準を定め、機器の脆弱性残存状況を把握し、対応履歴を月次で点検していますか？", ids:["3-2-1-1", "3-2-1-2", "3-2-1-3", "3-2-1-4", "3-2-1-5"] },
+  { id:"p1", cat:4, q:"ユーザIDの付与・変更・削除は申請承認制で、ID共有を禁止（または利用者特定可能）とし、退職・異動時に速やかにID・権限を削除していますか？", ids:["4-1-1-1", "4-1-1-2", "4-1-1-3", "4-1-1-4"] },
+  { id:"p2", cat:4, q:"全サーバ・NW機器に管理者・責任者を定め、管理者IDは対象者を限定・申請承認制・最小権限・共有禁止・保有者把握・速やかな削除を行い、開発と本番の権限を分離していますか？", ids:["4-1-2-1", "4-1-2-2", "4-1-2-3", "4-1-2-4", "4-1-2-5", "4-1-2-6", "4-1-2-7", "4-1-2-8"] },
+  { id:"p3", cat:4, q:"全IDで認証を行い、重要機密を扱うクラウドサービスでは2要素以上の多要素認証（パスワード8文字以上）を常時使用していますか？", ids:["4-1-3-1", "4-1-3-2", "4-1-3-3", "4-1-3-4"] },
+  { id:"p4", cat:4, q:"インターネット経由の社内接続（VPN等）、管理者のリモートアクセス、重要システムへのアクセスにも常時多要素認証を使用していますか？", ids:["4-1-3-5"] },
+  { id:"p5", cat:4, q:"PC・スマートデバイスのログオンに試行回数制限（10回以上でロック等）があり、6文字以上のパスワード/PINを使用していますか？", ids:["4-1-4-1", "4-1-4-2"] },
+  { id:"p6", cat:4, q:"パスワードのルール（デフォルト変更・推測禁止・長さ/MFA要件・使い回し禁止・安全な保管・漏洩時の変更手順）が定められ、全要員に周知されていますか？", ids:["4-1-5-1", "4-1-5-2", "4-1-5-3", "4-1-5-4", "4-1-5-5", "4-1-6-1", "4-1-6-2", "4-1-6-3"] },
+  { id:"p7", cat:4, q:"システム・入室のアクセス権は申請承認制・最小範囲・台帳管理で、年1回以上棚卸し、重要システムは付与条件・設定手順・最小権限・利用監視の仕組みがありますか？", ids:["4-1-7-1", "4-1-7-2", "4-1-7-3", "4-1-7-4", "4-1-7-5", "4-1-7-6"] },
+  { id:"p8", cat:4, q:"サーバ設置エリアは入場可能者を定め、施錠（またはラック施錠）し、鍵の管理者を置き、入退場記録を6ヶ月以上保管していますか？", ids:["4-1-8-1", "4-1-8-2", "4-1-8-3", "4-1-8-4"] },
+  { id:"p9", cat:4, q:"PC・スマホ・カメラ・外部媒体（BYOD含む）の社内持込と、機器・媒体・印刷物の社外持出のルールがあり、年1回以上点検していますか？", ids:["4-1-9-1", "4-1-9-2", "4-1-9-3"] },
+  { id:"p10", cat:4, q:"経営層向けの理解機会、職場単位のルール周知、全要員へのメール/Web感染予防・機密区分の教育を新規受入時＋年1回以上実施し、記録・点検していますか？", ids:["4-2-1-1", "4-2-1-2", "4-2-1-3", "4-2-1-4", "4-2-1-5"] },
+  { id:"p11", cat:4, q:"インシデント発生時の対応に関する教育・訓練を、新規受入時＋年1回以上、eラーニングまたは集合教育で実施し、受講記録を保管・点検していますか？", ids:["4-2-2-1", "4-2-2-2", "4-2-2-3"] },
+  { id:"p12", cat:4, q:"持出PC・媒体と重要機密情報の暗号化ルール、業務データをPC以外の安全なサーバに保管するルール、取引先とのファイル共有・送信ルールがあり周知されていますか？", ids:["4-3-1-1", "4-3-1-2", "4-3-2-1", "4-3-3-1"] },
+  { id:"p13", cat:4, q:"取得対象・頻度・保管期間を定めてバックアップを取得し、重要機密情報は遠隔地にもバックアップし、対象ごとのリストア手順書がありますか？", ids:["4-3-4-1", "4-3-4-2", "4-3-4-3"] },
+  { id:"p14", cat:4, q:"未許可ソフトのインストール制限、外部媒体のauto-run無効化、サーバ・NW機器の設定変更承認制、不要サービスの無効化、デフォルトIDの停止、標準構成ルールを実施していますか？", ids:["4-4-1-1", "4-4-1-2", "4-4-1-3", "4-4-1-4", "4-4-1-5", "4-4-1-6"] },
+  { id:"p15", cat:4, q:"サポート切れのOS・ソフトウェアは使用していませんか？（やむを得ず残る場合、更改計画とリスク低減策がありますか？）", ids:["4-4-2-1"] },
+  { id:"p16", cat:4, q:"FW・プロキシ・認証サーバのログを6ヶ月以上保管し、ログ保存システムへのリモートアクセスにMFAを使い、認証ログを月1回以上モニタリングしていますか？", ids:["4-4-3-1", "4-4-3-2", "4-4-3-3"] },
+  { id:"p17", cat:4, q:"全機器がサポート内で自動更新が有効で、Critical/High（CVSS7.0以上）の更新を14日以内に適用し、境界NW機器にCVSS7.0以上の脆弱性が残っていませんか？", ids:["4-4-4-1", "4-4-4-2", "4-4-4-3"] },
+  { id:"p18", cat:4, q:"全PC・サーバにマルウェア対策を導入しスキャン・定義更新を行い、不正Webサイトへのアクセス制限とメールのマルウェアチェックを実施していますか？", ids:["4-4-5-1", "4-4-5-2", "4-4-5-3", "4-4-5-4", "4-4-5-5"] },
+  { id:"p19", cat:4, q:"FW・ルータのデフォルトパスワード変更、変更手順、未認証インバウンド遮断、インバウンドルール定義、不要ルール削除、リモート変更時のMFA/IP制限を実施していますか？", ids:["4-5-1-1", "4-5-1-2", "4-5-1-3", "4-5-1-4", "4-5-1-5", "4-5-1-6", "4-5-1-7"] },
+  { id:"p20", cat:4, q:"全PC・サーバでソフトウェアFWを有効化し、公開サーバと重要サーバを専用セグメントに分離して最小アクセスに限定していますか？", ids:["4-5-1-8", "4-5-1-9"] },
+  { id:"d1", cat:5, q:"境界または端末で、外部からの侵入と内部から不正サーバへの通信の双方をリアルタイム検知・遮断し、アラートと速報レポートが通知され、担当者がインシデント該当を判断していますか？", ids:["5-1-1-1", "5-1-1-2", "5-1-1-3"] },
+  { id:"d2", cat:5, q:"会社支給PCの許可ソフトウェア一覧を作成して年1回以上インストール状況を点検し、外部受領ファイルをリアルタイムスキャンまたは仮想環境で確認していますか？", ids:["5-1-2-1", "5-1-2-2", "5-1-2-3"] },
+  { id:"d3", cat:5, q:"インシデントのレベルと対象範囲を定義して周知し、検知・アラート時にレベル判定を行っていますか？", ids:["5-2-1-1", "5-2-1-2"] },
+  { id:"r1", cat:6, q:"発見報告〜初動〜調査〜復旧〜最終報告の対応手順、社内外（当局含む）連絡先と報告ルート、統括役員・担当部署の役割、報告フォーマットがあり、年1回以上点検し、事例を社内共有していますか？", ids:["6-1-1-1", "6-1-1-2", "6-1-1-3", "6-1-1-4", "6-1-1-5", "6-1-1-6"] },
+  { id:"c1", cat:7, q:"事業継続上重要なシステムについて、サイバー攻撃を念頭に目標復旧レベル（RTO/RPO）を定め、復旧対策を整備し、リストア手順どおりにRTO内で復元できることを検証していますか？", ids:["7-1-1-1", "7-1-1-2"] }
+];
+const ANSWERS = [
+  { v:"yes", label:"実施している", key:"1" },
+  { v:"partial", label:"一部実施している", key:"2" },
+  { v:"no", label:"実施していない　または　不明", key:"3" },
+];
+const STATUS_LABEL = { yes:"実施済", partial:"一部実施", no:"未実施", none:"未回答" };
+const OK="#2E9E6B", MID="#D9952F", NG="#D9596B", GRAY="#C9CFD8", CYAN="#2E5AAC";
+function colorOf(s){ return s==="yes"?OK:s==="partial"?MID:s==="no"?NG:GRAY; }
+
+const S = { target:4, answers:{}, idx:0, view:"survey", company:"", detail:{}, detailOpen:{} };
+
+function qs(){ return QUESTIONS.map(q => ({...q, ids:q.ids.filter(id => CMAP[id][1] <= S.target)})).filter(q => q.ids.length>0); }
+
+function compute(list){
+  const crit={};
+  list.forEach(q => { const a=S.answers[q.id]||"none"; const d=S.detail[q.id]||{}; q.ids.forEach(id => crit[id]=d[id]||a); });
+  const byCat={}; Object.keys(CATS).forEach(k => byCat[k]={yes:0,partial:0,no:0,none:0,total:0});
+  Object.entries(crit).forEach(([id,s]) => { byCat[id[0]][s]++; byCat[id[0]].total++; });
+  const gaps=Object.entries(crit).filter(([,s]) => s==="no"||s==="partial").map(([id,s]) => ({id,s,c:CMAP[id]}));
+  const W={no:1,partial:0.5}; const prod={};
+  gaps.forEach(({id,s,c}) => {
+    const alts=c[3].filter(p => p!==SELF);
+    alts.forEach(p => {
+      prod[p]=prod[p]||{name:p,ids:[],weight:0,unique:0};
+      prod[p].ids.push(id);
+      prod[p].weight += W[s]/alts.length;      // 代替製品数で按分（少ないほど価値大）
+      if(alts.length===1) prod[p].unique++;    // その製品しか埋められない基準
+    });
+  });
+  const products=Object.values(prod).sort((a,b) => b.weight-a.weight || b.unique-a.unique || b.ids.length-a.ids.length);
+  const selfOnly=gaps.filter(({c}) => c[3].every(p => p===SELF));
+  const total=Object.values(byCat).reduce((s,c) => s+c.total,0);
+  const score=Object.values(byCat).reduce((s,c) => s+c.yes+c.partial*0.5,0);
+  return { crit, byCat, gaps, products, selfOnly, total, score };
+}
+
+function setView(v){ S.view=v; render(); }
+function setTarget(t){ S.target=t; S.idx=0; render(); }
+function resetAll(){ if(confirm("回答をすべてクリアします。よろしいですか？")){ S.answers={}; S.idx=0; S.view="survey"; render(); } }
+function answer(v){ const list=qs(); const q=list[S.idx]; if(!q)return; S.answers[q.id]=v; delete S.detail[q.id]; delete S.detailOpen[q.id]; if(S.idx<list.length-1){ S.idx++; } else { S.view="result"; } render(); }
+function toggleDetail(qid){ S.detailOpen[qid]=!S.detailOpen[qid]; render(); }
+function setCrit(qid, cid, v){
+  S.detail[qid]=S.detail[qid]||{};
+  S.detail[qid][cid] = (S.detail[qid][cid]===v ? undefined : v);
+  if(S.detail[qid][cid]===undefined) delete S.detail[qid][cid];
+  // 全基準が埋まったら束の判定を自動導出
+  const list=qs(); const q=list.find(x=>x.id===qid);
+  if(q){
+    const d=S.detail[qid]||{};
+    const vals=q.ids.map(id=>d[id]);
+    if(vals.every(x=>x)){
+      S.answers[qid] = vals.every(x=>x==="yes") ? "yes" : vals.every(x=>x==="no") ? "no" : "partial";
+    } else {
+      delete S.answers[qid];
+    }
+  }
+  render();
+}
+function go(d){ const list=qs(); S.idx=Math.max(0,Math.min(list.length-1,S.idx+d)); render(); }
+function jump(i){ S.idx=i; render(); }
+function esc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+function render(){
+  const list=qs();
+  const answered=list.filter(x => S.answers[x.id]).length;
+  document.getElementById("tab-survey").className = "tab" + (S.view==="survey"?" on":"");
+  document.getElementById("tab-result").className = "tab" + (S.view==="result"?" on":"");
+  document.getElementById("s3").className = "starbtn " + (S.target===3?"star-on":"star-off");
+  document.getElementById("s4").className = "starbtn " + (S.target===4?"star-on":"star-off");
+  document.getElementById("progress").innerHTML = '回答済 <span class="prognum">' + answered + " / " + list.length + '</span>';
+  const app=document.getElementById("app");
+  if(S.view==="survey"){ app.innerHTML = surveyHTML(list, answered); }
+  else { app.innerHTML = resultHTML(list); }
+}
+
+function surveyHTML(list, answered){
+  const idx=Math.min(S.idx, list.length-1);
+  const q=list[idx];
+  if(!q) return '<div class="card">対象の設問がありません。</div>';
+  const cur=S.answers[q.id];
+  const opts=ANSWERS.map(o => {
+    const sel=cur===o.v; const col=colorOf(o.v);
+    return '<button class="opt'+(sel?' sel':'')+'" style="'+(sel?'border-color:'+col:'')+'" onclick="answer(\''+o.v+'\')">'+
+      '<span class="optkey" style="'+(sel?'background:'+col+';color:#1F2A66':'')+'">'+o.key+'</span>'+
+      '<span class="optlabel">'+esc(o.label)+'</span></button>';
+  }).join("");
+  const dots=list.map((x,i) => {
+    const st=S.answers[x.id]; const c=i===idx;
+    const base=list.length>38?9:list.length>30?10:11;
+    const sz=c?base+5:base;
+    return '<button class="dot" title="Q'+(i+1)+'" onclick="jump('+i+')" style="width:'+sz+'px;height:'+sz+'px;background:'+(st?colorOf(st):(c?"#1F2A66":"#C9CFD8"))+';'+(c?"box-shadow:0 0 0 3px rgba(31,42,102,0.22)":"")+'"></button>';
+  }).join("");
+  const detailBlock='';
+
+  return '<div class="card">'+
+    '<div class="qmeta"><span class="qcat">'+q.cat+'. '+esc(CATS[q.cat])+'</span><span>全 '+list.length+' 問中 '+(idx+1)+' 問目／あと '+(list.length-answered)+' 問</span></div>'+
+    '<div class="qtext">'+esc(q.q)+'</div>'+
+    '<div class="qhint"><span style="color:#8A93A6;">対象の評価基準 '+q.ids.join("　")+'</span></div>'+
+    '<div class="opts">'+opts+'</div>'+detailBlock+
+    '<div class="nav"><button class="navbtn" '+(idx===0?"disabled":"")+' onclick="go(-1)">← 前へ</button>'+
+    (idx<list.length-1 ? '<button class="navbtn primary" onclick="go(1)">次へ →</button>' : '<button class="navbtn primary" onclick="setView(\'result\')">結果を見る</button>')+
+    '</div><div class="dots">'+dots+'</div></div>';
+}
+
+function catBreakdown(ids){
+  const cnt={};
+  ids.forEach(id => { const k=id[0]; cnt[k]=(cnt[k]||0)+1; });
+  return Object.keys(cnt).sort().map(k => esc(CATS[k].replace("の整備","").replace("攻撃等の","").replace("インシデントへの","").replace("インシデントからの","").replace("リスクの","リスク"))+" "+cnt[k]).join("・");
+}
+function resultHTML(list){
+  const r=compute(list);
+  const rp=r.total?Math.round((r.score/r.total)*100):0;
+  const noCount=r.gaps.filter(g=>g.s==="no").length;
+  const partialCount=r.gaps.filter(g=>g.s==="partial").length;
+  const noneCount=Object.values(r.crit).filter(x=>x==="none").length;
+  const pctColor=rp>=80?OK:rp>=50?MID:NG;
+  const stats=[["未実施",noCount,NG],["一部実施",partialCount,MID],["規程・運用で対応",r.selfOnly.length,"#1A2233"]];
+  if(noneCount>0) stats.push(["未回答",noneCount,"#6B7689"]);
+  const statHTML=stats.map(([l,v,c]) => '<div class="stat"><div style="font-size:11.5px;font-weight:700;color:#6B7689;">'+l+'</div><div style="font-size:26px;font-weight:700;color:'+c+';margin-top:3px;">'+v+'<span style="font-size:12px;color:#6B7689;margin-left:3px;">件</span></div></div>').join("");
+
+  const catHTML=Object.keys(CATS).map(k => {
+    const c=r.byCat[k]; if(!c.total) return "";
+    const pct=Math.round((c.yes+c.partial*0.5)/c.total*100);
+    const pc=pct>=80?OK:pct>=50?MID:NG;
+    // cells
+    let cells=""; const order=[["yes",c.yes],["partial",c.partial],["no",c.no],["none",c.none]];
+    order.forEach(([st,n]) => { for(let i=0;i<n;i++) cells+='<span style="flex:1;background:'+colorOf(st)+';border-radius:2px;"></span>'; });
+    return '<div class="catcard"><div style="font-size:11px;font-weight:700;color:#8A93A6;">'+k+'</div>'+
+      '<div style="font-size:12px;font-weight:700;line-height:1.45;min-height:34px;margin-top:3px;color:#1A2233;">'+esc(CATS[k])+'</div>'+
+      '<div style="font-size:24px;font-weight:700;margin:7px 0 8px;color:'+pc+'">'+pct+'<span style="font-size:12px;color:#6B7689;">%</span></div>'+
+      '<div style="display:flex;gap:1px;height:10px;">'+cells+'</div></div>';
+  }).join("");
+
+  // ===== 対策サービス：サポアカ=規程レイヤー(AND) / 他ツール=代替可(OR) =====
+  const W2={no:1,partial:0.5};
+  const SAPO="サポアカ";
+  // 規程レイヤー：サポアカがマッピングされた不足基準（ツール導入だけでは満たせない）
+  const sapoGaps=r.gaps.filter(({c}) => c[3].includes(SAPO));
+  // ツールレイヤー：サポアカ・SELF以外の製品で対応できる不足基準
+  const pm={};
+  r.gaps.forEach(({id,s,c}) => {
+    const alts=c[3].filter(p => p!==SELF && p!==SAPO);
+    alts.forEach(p => {
+      pm[p]=pm[p]||{name:p,ids:[],sts:{},rawW:0};
+      pm[p].ids.push(id); pm[p].sts[id]=s; pm[p].rawW+=W2[s];
+    });
+  });
+  const denom={};
+  CRITERIA.forEach(c => { if(c[1]<=S.target) c[3].forEach(p => { if(p!==SELF&&p!==SAPO) denom[p]=(denom[p]||0)+1; }); });
+  Object.values(pm).forEach(p => { p.fit = denom[p.name] ? p.ids.length/denom[p.name] : 0; });
+
+  // ツールの推奨セット（貪欲法・サポアカ抜き）
+  const toolGaps=r.gaps.filter(({c}) => c[3].some(p => p!==SELF && p!==SAPO));
+  const totalCovW=toolGaps.reduce((s,{s:st}) => s+W2[st],0);
+  const setPicks=[];
+  { const remaining=new Set(toolGaps.map(g=>g.id));
+    const stById={}; toolGaps.forEach(g=>stById[g.id]=g.s);
+    while(remaining.size>0 && setPicks.length<5){
+      let best=null,bestW=0,bestIds=null;
+      Object.values(pm).forEach(p => {
+        const cov=p.ids.filter(id=>remaining.has(id));
+        const w=cov.reduce((s,id)=>s+W2[stById[id]],0);
+        if(w>bestW){ best=p; bestW=w; bestIds=cov; }
+      });
+      if(!best||bestW<=0) break;
+      bestIds.forEach(id=>remaining.delete(id));
+      const coveredW=totalCovW-[...remaining].reduce((s,id)=>s+W2[stById[id]],0);
+      setPicks.push({p:best, addIds:bestIds, cumPct: totalCovW?Math.round(coveredW/totalCovW*100):0});
+      if(setPicks[setPicks.length-1].cumPct>=90) break;
+    }
+  }
+  const inSet=new Set(setPicks.map(x=>x.p.name));
+
+  function prodCard(rankLabel, p, panelIds, note){
+    return '<div class="prod"><button class="prodhead" onclick="var e=this.nextElementSibling;e.style.display=e.style.display===\'block\'?\'none\':\'block\'">'+
+      '<span class="rank">'+rankLabel+'</span>'+
+      '<span><span style="display:block;font-size:14.5px;font-weight:700;">'+esc(p.name)+'</span>'+
+      '<span style="display:block;font-size:11.5px;color:#6B7689;margin-top:3px;">'+esc(note!==undefined?note:(PRODUCT_NOTE[p.name]||""))+'</span></span>'+
+      '<span></span>'+
+      '</button><div style="display:none;padding:0 16px 14px;">'+
+      panelIds.map(id => '<div style="display:grid;grid-template-columns:10px 70px 1fr;gap:10px;font-size:12px;padding:4px 0;color:#3D4A63;align-items:baseline;">'+
+        '<span style="width:8px;height:8px;border-radius:99px;background:'+colorOf(p.sts[id]||"no")+';align-self:center;"></span>'+
+        '<span style="color:#8A93A6;font-weight:700;">'+id+'</span><span>'+esc(CMAP[id][2])+'</span></div>').join("")+
+      '</div></div>';
+  }
+  function shelfHead(title, note){
+    return '<div class="shelfhead"><div style="margin:20px 0 4px;font-size:13.5px;font-weight:700;color:#1A2233;">'+title+'</div>'+
+      '<div style="font-size:11.5px;color:#6B7689;margin-bottom:10px;">'+note+'</div></div>';
+  }
+
+  let servicesHTML='';
+  if(sapoGaps.length===0 && Object.keys(pm).length===0){
+    servicesHTML='<div style="color:#6B7689;font-size:13px;">製品・サービスで補う不足基準はありません。</div>';
+  } else {
+    // 棚0: 規程・運用の整備（サポアカ＝常に併用が前提）
+    if(sapoGaps.length>0){
+      const sapoP={name:SAPO, sts:{}};
+      sapoGaps.forEach(g => sapoP.sts[g.id]=g.s);
+      servicesHTML+=shelfHead('まず必要：社内ルール・運用の整備',
+        'ツールを導入するだけでは満たせない項目です。社内ルールの整備とセットで進める必要があります（サポアカで伴走支援が可能）。');
+      servicesHTML+=prodCard('必', sapoP, sapoGaps.map(g=>g.id),
+        '規程・体制・ルール整備の伴走支援（対象 '+sapoGaps.length+' 項目）');
+    }
+    // 棚1: ツールの組み合わせ
+    if(setPicks.length>0){
+      const marks=["①","②","③","④","⑤"];
+      servicesHTML+=shelfHead('おすすめのツールの組み合わせ',
+        '少ない数で不足を幅広くカバーできる順に選んでいます。番号の順に、上記のルール整備とあわせてご検討ください。');
+      servicesHTML+=setPicks.map((x,i) => prodCard(marks[i], x.p, x.addIds)).join("");
+    }
+    // 棚2: ピンポイント
+    const point=Object.values(pm).filter(p=>!inSet.has(p.name)).sort((a,b)=>b.fit-a.fit||b.rawW-a.rawW).slice(0,4);
+    if(point.length){
+      servicesHTML+=shelfHead('あわせて検討したいサービス',
+        '対応できる範囲は限られますが、貴社に不足している部分をピンポイントで補えるサービスです。');
+      servicesHTML+=point.map(p => prodCard('・', p, p.ids)).join("");
+    }
+  }
+  // 規程・運用で対応（SELFのみのギャップ）の中身リスト
+  const selfSorted=[...r.selfOnly].sort((a,b) => (a.s===b.s?0:a.s==="no"?-1:1) || a.id.localeCompare(b.id));
+  const selfSection = r.selfOnly.length ? '<div class="section pagebreak"><h2 style="font-size:16px;font-weight:700;margin:0 0 5px;">規程・運用での対応が必要な項目（'+r.selfOnly.length+' 件）</h2>'+
+    '<div style="font-size:12.5px;color:#6B7689;margin-bottom:16px;">製品では代替できず、社内の規程整備・運用で満たす評価基準です。取引先管理・ガバナンス領域が中心になります。</div>'+
+    selfSorted.map(({id,s,c}) => '<div style="display:grid;grid-template-columns:10px 76px 64px 1fr;gap:12px;align-items:baseline;font-size:13px;padding:7px 0;border-bottom:1px solid #E8EBF0;">'+
+      '<span style="width:8px;height:8px;border-radius:99px;background:'+colorOf(s)+';align-self:center;"></span>'+
+      '<span style="font-weight:700;color:#8A93A6;">'+id+'</span>'+
+      '<span style="font-weight:700;color:'+colorOf(s)+';">'+STATUS_LABEL[s]+'</span>'+
+      '<span style="color:#2A3547;line-height:1.6;">'+esc(c[2])+'</span></div>').join("")+'</div>' : "";
+
+  // 最弱分野（回答済みで充足率最下位）
+  let weakest=null;
+  Object.keys(CATS).forEach(k => {
+    const c=r.byCat[k]; if(!c.total) return;
+    const answeredInCat=c.total-c.none; if(answeredInCat===0) return;
+    const pct=Math.round((c.yes+c.partial*0.5)/c.total*100);
+    if(!weakest || pct<weakest.pct) weakest={k, pct};
+  });
+  const summary="★"+S.target+"の取得に向けて、未実施 "+noCount+" 件、一部実施 "+partialCount+" 件"+(noneCount>0?"、未回答 "+noneCount+" 件":"")+" の評価基準があります。うち "+r.selfOnly.length+" 件は規程・運用での対応が中心です。"+
+    (weakest ? '<br><span style="color:'+(weakest.pct>=80?OK:weakest.pct>=50?MID:NG)+';font-weight:700;">最優先で底上げすべき分野：'+weakest.k+'. '+esc(CATS[weakest.k])+'（充足率 '+weakest.pct+'%）</span>' : "");
+
+  const company=(S.company||"").trim();
+  const today=new Date().toLocaleDateString("ja-JP",{year:"numeric",month:"long",day:"numeric"});
+  const printHead='<div class="printhead"><div style="font-size:21px;font-weight:700;letter-spacing:0.04em;">'+esc(company||"貴社")+'　御中</div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:#6B7689;margin-top:6px;"><span>SCS ギャップ診断　★'+S.target+' 取得に向けた現状診断結果</span><span>'+today+'</span></div></div>';
+
+  return printHead+'<div class="hero"><div style="min-width:190px;">'+
+    '<div style="font-size:11.5px;font-weight:700;letter-spacing:0.12em;color:#2E5AAC;">★'+S.target+' 基準の充足率</div>'+
+    '<div style="display:flex;align-items:flex-end;gap:3px;margin-top:4px;"><div class="pct" style="color:'+pctColor+'">'+rp+'</div><div style="font-size:22px;font-weight:700;color:#B9C6FF;padding-bottom:12px;">%</div></div>'+
+    '<div style="font-size:12.5px;font-weight:700;color:#6B7689;">評価基準 '+r.total+' 件</div></div>'+
+    '<div style="display:grid;gap:12px;"><div style="display:flex;gap:10px;flex-wrap:wrap;">'+statHTML+'</div>'+
+    '<div style="font-size:13.5px;line-height:1.9;color:#2A3547;">'+summary+'</div></div></div>'+
+    '<div class="section"><h2 style="font-size:16px;font-weight:700;margin:0 0 18px;">分野別の状況</h2><div class="grid7">'+catHTML+'</div>'+
+    '<div style="display:flex;gap:18px;margin-top:15px;font-size:11.5px;font-weight:700;color:#6B7689;align-items:center;flex-wrap:wrap;">'+
+    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:'+OK+'"></span>実施済</span>'+
+    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:'+MID+'"></span>一部実施</span>'+
+    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:'+NG+'"></span>未実施</span>'+
+    '<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:'+GRAY+'"></span>未回答</span>'+
+    '<span style="margin-left:auto;">1マス＝評価基準1件</span></div></div>'+
+    '<div class="section pagebreak"><h2 style="font-size:16px;font-weight:700;margin:0 0 5px;">★'+S.target+' 取得に向けた対策サービス</h2>'+
+    '<div style="font-size:12.5px;color:#6B7689;margin-bottom:4px;">カードをクリックすると対象の評価基準を確認できます。</div>'+servicesHTML+'</div>'+
+    selfSection;
+}
+
+document.addEventListener("keydown", e => {
+  if(S.view!=="survey") return;
+  if(e.key==="1") answer("yes");
+  else if(e.key==="2") answer("partial");
+  else if(e.key==="3") answer("no");
+  else if(e.key==="ArrowLeft") go(-1);
+  else if(e.key==="ArrowRight") go(1);
+});
+render();
+</script>
+</body>
+</html>
